@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Reading Room — Course Catalog</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#211f1a;
+    --paper:#eeede2;
+    --paper-2:#e6e4d5;
+    --card:#f8f7ee;
+    --navy:#1c2b39;
+    --navy-2:#284158;
+    --brass:#a9772e;
+    --brass-deep:#8a5f22;
+    --moss:#4b6a55;
+    --line:#cdc6ab;
+    --line-strong:#a89f7f;
+    --danger:#9a3324;
+    --shadow: 0 1px 0 rgba(33,31,26,0.04), 0 8px 20px -12px rgba(33,31,26,0.35);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:
+      radial-gradient(circle at 1px 1px, rgba(33,31,26,0.07) 1px, transparent 0) 0 0/22px 22px,
+      var(--paper);
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+    min-height:100vh;
+  }
+  .mono{font-family:'IBM Plex Mono',monospace;}
+  .display{font-family:'Fraunces',serif;}
+  a{color:inherit;}
+  button{font-family:inherit;cursor:pointer;}
+  ::selection{background:var(--brass); color:#fff;}
+
+  /* ---------- Top bar ---------- */
+  .topbar{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:18px 28px;
+    border-bottom:1px solid var(--line);
+    background:var(--paper);
+    position:sticky; top:0; z-index:20;
+  }
+  .brand{display:flex; align-items:baseline; gap:10px;}
+  .brand .mark{
+    width:34px;height:34px;border:1.5px solid var(--navy);
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Fraunces',serif; font-weight:700; font-size:16px;
+    color:var(--navy); border-radius:3px; transform:rotate(-2deg);
+  }
+  .brand h1{font-size:19px; margin:0; font-weight:600; letter-spacing:0.2px;}
+  .brand .sub{font-size:11px; text-transform:uppercase; letter-spacing:1.5px; color:var(--brass-deep); font-family:'IBM Plex Mono',monospace;}
+  .topbar-right{display:flex;align-items:center;gap:16px;}
+  .who{font-size:13px;color:#514c3f;}
+  .who b{color:var(--ink);}
+  .btn{
+    border:1px solid var(--navy); background:transparent; color:var(--navy);
+    padding:8px 14px; font-size:13px; font-weight:600; border-radius:3px;
+    transition:transform .12s ease, background .12s ease, color .12s ease;
+  }
+  .btn:hover{background:var(--navy); color:#fff;}
+  .btn:active{transform:translateY(1px);}
+  .btn.primary{background:var(--navy); color:#fff;}
+  .btn.primary:hover{background:var(--navy-2);}
+  .btn.brass{border-color:var(--brass); color:var(--brass-deep);}
+  .btn.brass:hover{background:var(--brass); color:#fff;}
+  .btn.ghost{border-color:transparent; color:#6b6455;}
+  .btn.ghost:hover{background:var(--paper-2); color:var(--ink);}
+  .btn.small{padding:5px 10px; font-size:12px;}
+  .btn:disabled{opacity:0.45; cursor:not-allowed; pointer-events:none;}
+
+  .wrap{max-width:1120px; margin:0 auto; padding:36px 28px 80px;}
+  .hidden{display:none !important;}
+
+  /* ---------- Auth screen ---------- */
+  .auth-shell{
+    min-height:calc(100vh - 68px);
+    display:flex; align-items:center; justify-content:center;
+    padding:40px 20px;
+  }
+  .card-membership{
+    width:420px; max-width:100%;
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:6px;
+    box-shadow:var(--shadow);
+    padding:34px 32px 28px;
+    position:relative;
+    overflow:hidden;
+  }
+  .card-membership::before{
+    content:"";
+    position:absolute; top:0; left:0; right:0; height:6px;
+    background:repeating-linear-gradient(90deg, var(--brass) 0 14px, transparent 14px 20px);
+    opacity:0.5;
+  }
+  .card-membership h2{margin:2px 0 4px; font-size:24px; font-weight:600;}
+  .card-membership p.lead{margin:0 0 22px; font-size:13.5px; color:#5b5544;}
+  .field{margin-bottom:14px;}
+  .field label{
+    display:block; font-size:11px; text-transform:uppercase; letter-spacing:1.2px;
+    color:#8a8268; margin-bottom:6px; font-family:'IBM Plex Mono',monospace;
+  }
+  .field input, .field select, .field textarea{
+    width:100%; padding:10px 12px; border:1px solid var(--line-strong);
+    border-radius:3px; background:#fff; font-size:14px; color:var(--ink);
+    font-family:'Inter',sans-serif;
+  }
+  .field input:focus, .field select:focus, .field textarea:focus{
+    outline:2px solid var(--navy); outline-offset:1px;
+  }
+  .auth-toggle{
+    display:flex; gap:2px; margin-bottom:22px; background:var(--paper-2);
+    border-radius:4px; padding:3px; border:1px solid var(--line);
+  }
+  .auth-toggle button{
+    flex:1; border:none; background:transparent; padding:8px 0;
+    font-size:13px; font-weight:600; border-radius:3px; color:#7a7360;
+  }
+  .auth-toggle button.active{background:var(--navy); color:#fff;}
+  .error-msg{
+    background:#f6e6e0; border:1px solid #e0b6a6; color:var(--danger);
+    font-size:12.5px; padding:8px 10px; border-radius:3px; margin-bottom:14px;
+  }
+  .hint{font-size:11.5px; color:#918a72; margin-top:16px; line-height:1.5;}
+
+  /* ---------- Dashboard header ---------- */
+  .dash-head{display:flex; align-items:flex-end; justify-content:space-between; flex-wrap:wrap; gap:18px; margin-bottom:28px;}
+  .dash-head h2{font-size:30px; margin:0 0 6px; font-weight:600;}
+  .dash-head .eyebrow{font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:2px; text-transform:uppercase; color:var(--brass-deep); margin-bottom:6px;}
+  .stat-strip{display:flex; gap:22px; align-items:center;}
+  .stat{text-align:right;}
+  .stat .num{font-family:'Fraunces',serif; font-size:26px; font-weight:600; line-height:1;}
+  .stat .lbl{font-size:10.5px; text-transform:uppercase; letter-spacing:1px; color:#8a8268; margin-top:2px;}
+  .progress-ring{
+    width:56px;height:56px;border-radius:50%;
+    background: conic-gradient(var(--brass) calc(var(--pct,0)*1%), var(--line) 0);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .progress-ring .inner{
+    width:44px;height:44px;border-radius:50%; background:var(--paper);
+    display:flex;align-items:center;justify-content:center;
+    font-family:'IBM Plex Mono',monospace; font-size:11px; font-weight:600;
+  }
+
+  .filter-row{display:flex; gap:8px; margin-bottom:22px; flex-wrap:wrap;}
+  .chip{
+    border:1px solid var(--line-strong); background:var(--card); padding:6px 13px;
+    border-radius:20px; font-size:12.5px; color:#5b5544; font-weight:500;
+  }
+  .chip.active{background:var(--navy); border-color:var(--navy); color:#fff;}
+
+  /* ---------- Course grid / index cards ---------- */
+  .catalog{
+    display:grid; grid-template-columns:repeat(auto-fill, minmax(260px, 1fr));
+    gap:18px;
+  }
+  .index-card{
+    background:var(--card); border:1px solid var(--line); border-radius:5px;
+    padding:0; position:relative; box-shadow:var(--shadow);
+    display:flex; flex-direction:column; overflow:hidden;
+    transition:transform .14s ease, box-shadow .14s ease;
+  }
+  .index-card:hover{transform:translateY(-3px); box-shadow:0 4px 0 rgba(33,31,26,0.05), 0 16px 28px -14px rgba(33,31,26,0.4);}
+  .index-card .tab{
+    font-family:'IBM Plex Mono',monospace; font-size:11px; color:#fff;
+    background:var(--navy); padding:5px 12px; letter-spacing:0.5px;
+    display:inline-flex; width:fit-content; border-radius:0 0 4px 0;
+  }
+  .index-card .body{padding:16px 18px 18px; flex:1; display:flex; flex-direction:column;}
+  .index-card h3{font-family:'Fraunces',serif; font-size:18px; font-weight:600; margin:2px 0 8px; line-height:1.25;}
+  .index-card .desc{font-size:13px; color:#5b5544; line-height:1.5; margin:0 0 14px; flex:1;}
+  .meta-row{display:flex; gap:10px; font-size:11px; color:#8a8268; margin-bottom:12px; font-family:'IBM Plex Mono',monospace;}
+  .bar-track{height:6px; background:var(--line); border-radius:3px; overflow:hidden; margin-bottom:10px;}
+  .bar-fill{height:100%; background:var(--brass); border-radius:3px; transition:width .3s ease;}
+  .status-row{display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;}
+  .status-label{font-size:11.5px; font-weight:600; text-transform:uppercase; letter-spacing:0.6px;}
+  .status-label.not-started{color:#928a6f;}
+  .status-label.in-progress{color:var(--brass-deep);}
+  .status-label.complete{color:var(--moss);}
+  .stamp{
+    position:absolute; top:14px; right:14px;
+    border:2.5px solid var(--brass-deep); color:var(--brass-deep);
+    font-family:'IBM Plex Mono',monospace; font-weight:700; font-size:10.5px;
+    padding:4px 8px; border-radius:3px; transform:rotate(-9deg);
+    letter-spacing:1px; background:rgba(255,255,255,0.6);
+    animation: stampIn .35s ease-out;
+  }
+  @keyframes stampIn{
+    0%{opacity:0; transform:rotate(-9deg) scale(2.4);}
+    60%{opacity:1;}
+    100%{opacity:1; transform:rotate(-9deg) scale(1);}
+  }
+  .admin-actions{display:flex; gap:6px; margin-top:auto; padding-top:10px; border-top:1px dashed var(--line);}
+
+  /* ---------- Course detail ---------- */
+  .detail-shell{display:grid; grid-template-columns:280px 1fr; gap:26px; align-items:flex-start;}
+  @media (max-width:820px){.detail-shell{grid-template-columns:1fr;}}
+  .ledger{
+    background:var(--card); border:1px solid var(--line); border-radius:5px;
+    padding:6px; box-shadow:var(--shadow); position:sticky; top:88px;
+  }
+  .ledger .lhead{padding:14px 14px 10px; border-bottom:1px solid var(--line);}
+  .ledger .lhead .acc{font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--brass-deep); letter-spacing:1px;}
+  .ledger .lhead h3{font-family:'Fraunces',serif; margin:4px 0 0; font-size:18px;}
+  .lesson-row{
+    display:flex; align-items:center; gap:10px; padding:11px 12px;
+    border-bottom:1px solid var(--paper-2); font-size:13px; cursor:pointer;
+  }
+  .lesson-row:last-child{border-bottom:none;}
+  .lesson-row:hover{background:var(--paper-2);}
+  .lesson-row.active{background:var(--navy); color:#fff; border-radius:3px;}
+  .lesson-row .idx{
+    width:20px;height:20px; border-radius:50%; border:1.5px solid currentColor;
+    display:flex; align-items:center; justify-content:center; font-size:10px;
+    font-family:'IBM Plex Mono',monospace; flex-shrink:0;
+  }
+  .lesson-row.done .idx{background:var(--moss); border-color:var(--moss); color:#fff;}
+  .lesson-row .type-tag{margin-left:auto; font-size:9.5px; text-transform:uppercase; opacity:0.6; font-family:'IBM Plex Mono',monospace;}
+  .lesson-title{flex:1; line-height:1.35;}
+
+  .lesson-panel{background:var(--card); border:1px solid var(--line); border-radius:5px; box-shadow:var(--shadow); padding:30px 34px;}
+  .lesson-panel .eyebrow{font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:var(--brass-deep); margin-bottom:8px;}
+  .lesson-panel h2{font-family:'Fraunces',serif; font-size:26px; margin:0 0 18px;}
+  .lesson-content{font-size:15px; line-height:1.75; color:#302d24; margin-bottom:26px;}
+  .lesson-content p{margin:0 0 14px;}
+  .video-frame{position:relative; padding-bottom:56.25%; height:0; margin-bottom:20px; border-radius:4px; overflow:hidden; border:1px solid var(--line);}
+  .video-frame iframe{position:absolute; top:0; left:0; width:100%; height:100%; border:0;}
+  .file-box{
+    display:flex; align-items:center; gap:12px; padding:14px 16px; border:1px dashed var(--line-strong);
+    border-radius:4px; margin-bottom:20px; background:var(--paper-2);
+  }
+  .file-box .icon{
+    width:34px;height:34px; border:1.5px solid var(--navy); border-radius:3px;
+    display:flex; align-items:center; justify-content:center; font-family:'IBM Plex Mono',monospace; font-size:11px; font-weight:700; color:var(--navy);
+  }
+  .file-box a{font-size:13.5px; font-weight:600; text-decoration:none; color:var(--navy);}
+  .file-box a:hover{text-decoration:underline;}
+  .lesson-nav{display:flex; justify-content:space-between; align-items:center; padding-top:18px; border-top:1px solid var(--line);}
+
+  /* ---------- Quiz ---------- */
+  .quiz-q{margin-bottom:18px; padding:14px 16px; border:1px solid var(--line); border-radius:4px; background:var(--paper-2);}
+  .quiz-q .qtext{font-weight:600; margin-bottom:10px; font-size:14px;}
+  .quiz-opt{display:flex; align-items:center; gap:8px; padding:7px 0; font-size:13.5px; cursor:pointer;}
+  .quiz-opt input{accent-color:var(--navy);}
+  .quiz-result{font-size:13.5px; font-weight:600; margin-top:6px;}
+  .quiz-result.pass{color:var(--moss);}
+  .quiz-result.fail{color:var(--danger);}
+
+  /* ---------- Admin editor ---------- */
+  .modal-bg{position:fixed; inset:0; background:rgba(28,26,20,0.55); display:flex; align-items:flex-start; justify-content:center; padding:44px 16px; z-index:50; overflow-y:auto;}
+  .modal{background:var(--paper); border:1px solid var(--line); border-radius:6px; width:640px; max-width:100%; padding:26px 28px 28px; box-shadow:0 20px 60px rgba(0,0,0,0.35);}
+  .modal h3{font-family:'Fraunces',serif; margin:0 0 4px; font-size:21px;}
+  .modal .sub{font-size:12.5px; color:#8a8268; margin-bottom:18px;}
+  .lesson-edit-row{border:1px solid var(--line); border-radius:4px; padding:12px; margin-bottom:10px; background:var(--card);}
+  .lesson-edit-row .row2{display:flex; gap:10px;}
+  .lesson-edit-row .row2 > div{flex:1;}
+  .modal-actions{display:flex; justify-content:space-between; gap:10px; margin-top:20px; padding-top:16px; border-top:1px solid var(--line);}
+  .close-x{position:absolute; top:14px; right:16px; background:none; border:none; font-size:20px; color:#8a8268;}
+
+  footer.note{max-width:1120px; margin:40px auto 0; padding:0 28px; font-size:11.5px; color:#948d76; line-height:1.6;}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">
+    <div class="mark">R</div>
+    <div>
+      <h1>The Reading Room</h1>
+      <div class="sub">Asynchronous Study Program</div>
+    </div>
+  </div>
+  <div class="topbar-right" id="topbarRight"></div>
+</div>
+
+<div id="app" class="wrap"></div>
+
+<footer class="note" id="footNote"></footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+/* =========================================================
+   THE READING ROOM — Supabase-backed LMS
+   ========================================================= */
+
+// ---- Your Supabase project ----
+const SUPABASE_URL = 'https://tpsoxyrqijstjxzimmrk.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_xVNH-Mku2oLieMT2dPZwrw_PsEDjf9w';
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+let state = {
+  user: null,          // {id, email, name, isAdmin}
+  courses: [],
+  progress: {},         // {courseId: {completed:[lessonIds], done:bool}}
+  route: {name:'auth', params:{}},
+  authMode: 'login',
+  authError: '',
+  authBusy: false,
+  dashFilter: 'all'
+};
+
+/* ---------------- File uploads ---------------- */
+async function uploadFileToStorage(file, prefix){
+  const safeName = file.name.replace(/[^a-zA-Z0-9.\-_]/g, '_');
+  const path = `${prefix}/${Date.now()}-${safeName}`;
+  const { error } = await sb.storage.from('lesson-files').upload(path, file);
+  if(error){
+    alert('Upload failed: ' + error.message + '\n\nMake sure the "lesson-files" storage bucket exists (see the SQL setup) and that you are logged in as an admin.');
+    return null;
+  }
+  const { data: pub } = sb.storage.from('lesson-files').getPublicUrl(path);
+  return { url: pub.publicUrl, name: file.name };
+}
+
+/* ---------------- Data loading ---------------- */
+async function loadCourses(){
+  const { data, error } = await sb.from('courses').select('*').order('accession');
+  if(error){ console.error(error); state.courses = []; return; }
+  state.courses = data.map(c => ({
+    id: c.id, accession: c.accession, title: c.title, description: c.description,
+    lessons: c.lessons || [], quiz: c.quiz || []
+  }));
+}
+async function loadProgress(userId){
+  const { data, error } = await sb.from('progress').select('*').eq('user_id', userId);
+  if(error){ console.error(error); return {}; }
+  const p = {};
+  data.forEach(row => { p[row.course_id] = {completed: row.completed || [], done: !!row.done}; });
+  return p;
+}
+async function loadProfile(userId){
+  const { data, error } = await sb.from('profiles').select('*').eq('id', userId).maybeSingle();
+  if(error){ console.error(error); return null; }
+  return data;
+}
+
+/* ---------------- Auth ---------------- */
+async function handleLogin(email, password){
+  state.authError=''; state.authBusy=true; render();
+  const { data, error } = await sb.auth.signInWithPassword({ email, password });
+  state.authBusy=false;
+  if(error){ state.authError = error.message; render(); return; }
+  await afterAuth(data.user);
+}
+async function handleRegister(email, name, password){
+  state.authError='';
+  if(!email || !name || !password){ state.authError='Please fill in every field.'; render(); return; }
+  state.authBusy=true; render();
+  const { data, error } = await sb.auth.signUp({ email, password });
+  if(error){ state.authBusy=false; state.authError = error.message; render(); return; }
+  if(!data.user){
+    state.authBusy=false;
+    state.authError = 'Check your email to confirm your account, then log in.';
+    state.authMode = 'login';
+    render();
+    return;
+  }
+  await sb.from('profiles').insert({ id: data.user.id, name, is_admin: false });
+  state.authBusy=false;
+  await afterAuth(data.user, name);
+}
+async function afterAuth(authUser, fallbackName){
+  let profile = await loadProfile(authUser.id);
+  if(!profile){
+    // profile row missing (e.g. race on first signup) — create it
+    await sb.from('profiles').insert({ id: authUser.id, name: fallbackName || authUser.email, is_admin: false });
+    profile = await loadProfile(authUser.id);
+  }
+  state.user = { id: authUser.id, email: authUser.email, name: (profile && profile.name) || authUser.email, isAdmin: !!(profile && profile.is_admin) };
+  state.progress = await loadProgress(authUser.id);
+  state.route = {name:'dashboard', params:{}};
+  render();
+}
+async function handleLogout(){
+  await sb.auth.signOut();
+  state.user = null;
+  state.progress = {};
+  state.route = {name:'auth', params:{}};
+  render();
+}
+
+/* ---------------- Progress helpers ---------------- */
+function courseProgress(courseId){
+  const course = state.courses.find(c=>c.id===courseId);
+  if(!course) return {pct:0, done:false, completed:[]};
+  const p = state.progress[courseId] || {completed:[], done:false};
+  const pct = course.lessons.length ? Math.round((p.completed.length/course.lessons.length)*100) : 0;
+  return {pct, done: p.done, completed: p.completed};
+}
+function overallStats(){
+  const total = state.courses.length;
+  let done = 0;
+  state.courses.forEach(c => { if(courseProgress(c.id).done) done++; });
+  return {total, done};
+}
+async function toggleLessonComplete(courseId, lessonId){
+  const course = state.courses.find(c=>c.id===courseId);
+  if(!course) return;
+  if(!state.progress[courseId]) state.progress[courseId] = {completed:[], done:false};
+  const p = state.progress[courseId];
+  const idx = p.completed.indexOf(lessonId);
+  if(idx>-1) p.completed.splice(idx,1); else p.completed.push(lessonId);
+  p.done = course.lessons.every(l => p.completed.includes(l.id));
+  await sb.from('progress').upsert({
+    user_id: state.user.id, course_id: courseId, completed: p.completed, done: p.done, updated_at: new Date().toISOString()
+  });
+  render();
+}
+
+/* ---------------- Rendering ---------------- */
+const app = document.getElementById('app');
+const topbarRight = document.getElementById('topbarRight');
+const footNote = document.getElementById('footNote');
+
+function render(){
+  renderTopbar();
+  renderFooter();
+  if(!state.user){ renderAuth(); return; }
+  if(state.route.name === 'dashboard') renderDashboard();
+  else if(state.route.name === 'course') renderCourseDetail(state.route.params.id);
+}
+
+function renderTopbar(){
+  if(!state.user){ topbarRight.innerHTML = ''; return; }
+  topbarRight.innerHTML = `
+    <span class="who">Signed in as <b>${escapeHtml(state.user.name)}</b>${state.user.isAdmin ? ' <span class="mono" style="color:#a9772e;">· admin</span>' : ''}</span>
+    <button class="btn ghost" id="logoutBtn">Log out</button>
+  `;
+  document.getElementById('logoutBtn').onclick = handleLogout;
+}
+
+function renderFooter(){
+  footNote.innerHTML = state.user
+    ? `Connected to Supabase — accounts, sessions, and progress are stored securely in your project's database.`
+    : '';
+}
+
+function renderAuth(){
+  app.innerHTML = `
+    <div class="auth-shell">
+      <div class="card-membership">
+        <div class="auth-toggle">
+          <button id="tabLogin" class="${state.authMode==='login'?'active':''}">Log in</button>
+          <button id="tabRegister" class="${state.authMode==='register'?'active':''}">Enroll</button>
+        </div>
+        ${state.authMode==='login' ? `
+          <h2>Welcome back</h2>
+          <p class="lead">Sign in to pick up where you left off.</p>
+          ${state.authError ? `<div class="error-msg">${escapeHtml(state.authError)}</div>` : ''}
+          <div class="field"><label>Email</label><input id="loginUser" type="email" autocomplete="username"></div>
+          <div class="field"><label>Password</label><input id="loginPass" type="password" autocomplete="current-password"></div>
+          <button class="btn primary" id="loginBtn" style="width:100%;" ${state.authBusy?'disabled':''}>${state.authBusy?'Signing in…':'Log in'}</button>
+          <p class="hint">First time here? Switch to "Enroll" to create your account.</p>
+        ` : `
+          <h2>Enroll in the program</h2>
+          <p class="lead">Create your learner account.</p>
+          ${state.authError ? `<div class="error-msg">${escapeHtml(state.authError)}</div>` : ''}
+          <div class="field"><label>Full name</label><input id="regName" type="text"></div>
+          <div class="field"><label>Email</label><input id="regUser" type="email" autocomplete="username"></div>
+          <div class="field"><label>Choose a password</label><input id="regPass" type="password" autocomplete="new-password"></div>
+          <button class="btn primary" id="registerBtn" style="width:100%;" ${state.authBusy?'disabled':''}>${state.authBusy?'Creating account…':'Create account'}</button>
+          <p class="hint">Your account is secured by Supabase Auth. The program admin grants admin access from the database — new accounts start as regular learners.</p>
+        `}
+      </div>
+    </div>
+  `;
+  document.getElementById('tabLogin').onclick = () => { state.authMode='login'; state.authError=''; render(); };
+  document.getElementById('tabRegister').onclick = () => { state.authMode='register'; state.authError=''; render(); };
+  if(state.authMode==='login'){
+    document.getElementById('loginBtn').onclick = () => handleLogin(
+      document.getElementById('loginUser').value.trim(),
+      document.getElementById('loginPass').value
+    );
+  } else {
+    document.getElementById('registerBtn').onclick = () => handleRegister(
+      document.getElementById('regUser').value.trim(),
+      document.getElementById('regName').value.trim(),
+      document.getElementById('regPass').value
+    );
+  }
+}
+
+function renderDashboard(){
+  const stats = overallStats();
+  const filter = state.dashFilter || 'all';
+  let list = state.courses.slice().sort((a,b)=>a.accession.localeCompare(b.accession));
+  if(filter !== 'all'){
+    list = list.filter(c => {
+      const p = courseProgress(c.id);
+      if(filter==='not-started') return p.completed.length===0;
+      if(filter==='in-progress') return p.completed.length>0 && !p.done;
+      if(filter==='complete') return p.done;
+      return true;
+    });
+  }
+  app.innerHTML = `
+    <div class="dash-head">
+      <div>
+        <div class="eyebrow">Catalog · ${stats.total} courses</div>
+        <h2>Good to see you, ${escapeHtml(state.user.name.split(' ')[0])}.</h2>
+      </div>
+      <div class="stat-strip">
+        <div class="progress-ring" style="--pct:${stats.total? Math.round(stats.done/stats.total*100):0}">
+          <div class="inner">${stats.total? Math.round(stats.done/stats.total*100):0}%</div>
+        </div>
+        <div class="stat"><div class="num">${stats.done}/${stats.total}</div><div class="lbl">Completed</div></div>
+        ${state.user.isAdmin ? `<button class="btn brass small" id="addCourseBtn">+ Add course</button>` : ''}
+      </div>
+    </div>
+    <div class="filter-row">
+      <button class="chip ${filter==='all'?'active':''}" data-f="all">All</button>
+      <button class="chip ${filter==='not-started'?'active':''}" data-f="not-started">Not started</button>
+      <button class="chip ${filter==='in-progress'?'active':''}" data-f="in-progress">In progress</button>
+      <button class="chip ${filter==='complete'?'active':''}" data-f="complete">Complete</button>
+    </div>
+    <div class="catalog">
+      ${list.map(c => courseCardHtml(c)).join('')}
+    </div>
+  `;
+  app.querySelectorAll('.chip').forEach(el => el.onclick = () => { state.dashFilter = el.dataset.f; render(); });
+  app.querySelectorAll('.open-course').forEach(el => el.onclick = () => {
+    state.route = {name:'course', params:{id: el.dataset.id, lesson: null}};
+    render();
+  });
+  if(state.user.isAdmin){
+    const addBtn = document.getElementById('addCourseBtn');
+    if(addBtn) addBtn.onclick = () => openCourseEditor(null);
+    app.querySelectorAll('.edit-course').forEach(el => el.onclick = (e) => { e.stopPropagation(); openCourseEditor(el.dataset.id); });
+    app.querySelectorAll('.delete-course').forEach(el => el.onclick = async (e) => {
+      e.stopPropagation();
+      if(confirm('Remove this course from the catalog?')){
+        await sb.from('courses').delete().eq('id', el.dataset.id);
+        state.courses = state.courses.filter(c=>c.id!==el.dataset.id);
+        render();
+      }
+    });
+  }
+}
+
+function courseCardHtml(c){
+  const p = courseProgress(c.id);
+  const statusText = p.done ? 'Complete' : (p.completed.length>0 ? 'In progress' : 'Not started');
+  const statusClass = p.done ? 'complete' : (p.completed.length>0 ? 'in-progress' : 'not-started');
+  return `
+    <div class="index-card open-course" data-id="${c.id}" style="cursor:pointer;">
+      ${p.done ? `<div class="stamp">complete</div>` : ''}
+      <div class="tab mono">No. ${c.accession} / ${state.courses.length}</div>
+      <div class="body">
+        <h3>${escapeHtml(c.title)}</h3>
+        <p class="desc">${escapeHtml(c.description)}</p>
+        <div class="meta-row"><span>${c.lessons.length} lessons</span><span>·</span><span>${c.quiz && c.quiz.length ? '1 quiz' : 'no quiz'}</span></div>
+        <div class="status-row">
+          <span class="status-label ${statusClass}">${statusText}</span>
+          <span class="mono" style="font-size:11px; color:#8a8268;">${p.pct}%</span>
+        </div>
+        <div class="bar-track"><div class="bar-fill" style="width:${p.pct}%;"></div></div>
+        ${state.user.isAdmin ? `
+          <div class="admin-actions">
+            <button class="btn ghost small edit-course" data-id="${c.id}">Edit</button>
+            <button class="btn ghost small delete-course" data-id="${c.id}" style="color:#9a3324;">Delete</button>
+          </div>` : ''}
+      </div>
+    </div>
+  `;
+}
+
+function renderCourseDetail(courseId){
+  const course = state.courses.find(c=>c.id===courseId);
+  if(!course){ state.route={name:'dashboard',params:{}}; render(); return; }
+  const p = state.progress[courseId] || {completed:[], done:false};
+  const activeLessonId = state.route.params.lesson || course.lessons[0].id;
+  const activeLesson = course.lessons.find(l=>l.id===activeLessonId) || course.lessons[0];
+  const showQuiz = state.route.params.lesson === '__quiz__';
+
+  app.innerHTML = `
+    <button class="btn ghost small" id="backBtn" style="margin-bottom:18px;">&larr; Back to catalog</button>
+    <div class="detail-shell">
+      <div class="ledger">
+        <div class="lhead">
+          <div class="acc mono">No. ${course.accession} / ${state.courses.length}</div>
+          <h3>${escapeHtml(course.title)}</h3>
+        </div>
+        ${course.lessons.map((l,i)=>`
+          <div class="lesson-row ${p.completed.includes(l.id)?'done':''} ${(!showQuiz && l.id===activeLesson.id)?'active':''}" data-lesson="${l.id}">
+            <span class="idx mono">${p.completed.includes(l.id) ? '✓' : (i+1)}</span>
+            <span class="lesson-title">${escapeHtml(l.title)}</span>
+            <span class="type-tag">${l.type}</span>
+          </div>
+        `).join('')}
+        ${course.quiz && course.quiz.length ? `
+          <div class="lesson-row ${showQuiz?'active':''}" data-lesson="__quiz__">
+            <span class="idx mono">Q</span>
+            <span class="lesson-title">Quiz check</span>
+            <span class="type-tag">quiz</span>
+          </div>` : ''}
+        ${state.user.isAdmin ? `<div style="padding:10px 12px;"><button class="btn ghost small" id="editThisCourse" style="width:100%;">Edit this course</button></div>` : ''}
+      </div>
+      <div class="lesson-panel">
+        ${showQuiz ? quizHtml(course) : lessonHtml(course, activeLesson, p)}
+      </div>
+    </div>
+  `;
+  document.getElementById('backBtn').onclick = () => { state.route={name:'dashboard',params:{}}; render(); };
+  if(state.user.isAdmin){
+    const editBtn = document.getElementById('editThisCourse');
+    if(editBtn) editBtn.onclick = () => openCourseEditor(course.id);
+  }
+  app.querySelectorAll('.lesson-row').forEach(el => el.onclick = () => {
+    state.route = {name:'course', params:{id: courseId, lesson: el.dataset.lesson}};
+    render();
+  });
+  const markBtn = document.getElementById('markCompleteBtn');
+  if(markBtn) markBtn.onclick = () => toggleLessonComplete(courseId, activeLesson.id);
+  wireQuiz(course);
+}
+
+function lessonHtml(course, lesson, p){
+  const isDone = p.completed.includes(lesson.id);
+  let body = '';
+  if(lesson.type === 'video'){
+    body = `<div class="video-frame"><iframe src="${escapeAttr(lesson.content)}" allowfullscreen></iframe></div>`;
+  } else if(lesson.type === 'file'){
+    body = `<div class="file-box"><div class="icon">${(lesson.filename||'file').split('.').pop().slice(0,3).toUpperCase()}</div><a href="${escapeAttr(lesson.content)}" target="_blank" rel="noopener">Download ${escapeHtml(lesson.filename || 'attachment')} &rarr;</a></div>`;
+  } else {
+    body = `<div class="lesson-content"><p>${escapeHtml(lesson.content).replace(/\n\n/g,'</p><p>')}</p></div>`;
+  }
+  return `
+    <div class="eyebrow">${escapeHtml(course.title)}</div>
+    <h2>${escapeHtml(lesson.title)}</h2>
+    ${body}
+    <div class="lesson-nav">
+      <button class="btn ${isDone?'ghost':'primary'}" id="markCompleteBtn">${isDone ? '✓ Marked complete — click to undo' : 'Mark lesson complete'}</button>
+    </div>
+  `;
+}
+
+function quizHtml(course){
+  if(!course.quiz || !course.quiz.length) return '<p>No quiz for this course.</p>';
+  return `
+    <div class="eyebrow">${escapeHtml(course.title)}</div>
+    <h2>Quiz check</h2>
+    <div id="quizBody">
+      ${course.quiz.map((q,qi)=>`
+        <div class="quiz-q">
+          <div class="qtext">${qi+1}. ${escapeHtml(q.q)}</div>
+          ${q.attachmentUrl ? `<div class="file-box" style="margin:0 0 12px;"><div class="icon">${(q.attachmentName||'file').split('.').pop().slice(0,3).toUpperCase()}</div><a href="${escapeAttr(q.attachmentUrl)}" target="_blank" rel="noopener">View ${escapeHtml(q.attachmentName || 'attachment')} &rarr;</a></div>` : ''}
+          ${q.options.map((o,oi)=>`
+            <label class="quiz-opt"><input type="radio" name="q${qi}" value="${oi}"> ${escapeHtml(o)}</label>
+          `).join('')}
+        </div>
+      `).join('')}
+      <button class="btn primary" id="submitQuizBtn">Check answers</button>
+      <div id="quizResult"></div>
+    </div>
+  `;
+}
+function wireQuiz(course){
+  const submitBtn = document.getElementById('submitQuizBtn');
+  if(!submitBtn) return;
+  submitBtn.onclick = () => {
+    let correct = 0;
+    course.quiz.forEach((q,qi)=>{
+      const picked = document.querySelector(`input[name="q${qi}"]:checked`);
+      if(picked && parseInt(picked.value)===q.correct) correct++;
+    });
+    const pct = Math.round((correct/course.quiz.length)*100);
+    const passed = pct >= 70;
+    document.getElementById('quizResult').innerHTML =
+      `<div class="quiz-result ${passed?'pass':'fail'}">${correct}/${course.quiz.length} correct (${pct}%) — ${passed ? 'nice work.' : 'take another look and try again.'}</div>`;
+  };
+}
+
+/* ---------------- Admin: course editor modal ---------------- */
+function openCourseEditor(courseId){
+  const isNew = !courseId;
+  const course = isNew
+    ? { id:'c'+Date.now(), accession:String(state.courses.length+1).padStart(2,'0'), title:'', description:'', lessons:[], quiz:[] }
+    : JSON.parse(JSON.stringify(state.courses.find(c=>c.id===courseId)));
+
+  const bg = document.createElement('div');
+  bg.className = 'modal-bg';
+  bg.innerHTML = `
+    <div class="modal" style="position:relative;">
+      <button class="close-x" id="closeModal">&times;</button>
+      <h3>${isNew ? 'Add course' : 'Edit course'}</h3>
+      <div class="sub">Changes save to the shared catalog for every learner.</div>
+      <div class="field"><label>Title</label><input id="edTitle" value="${escapeAttr(course.title)}"></div>
+      <div class="field"><label>Description</label><textarea id="edDesc" rows="2">${escapeHtml(course.description)}</textarea></div>
+      <div class="field"><label>Lessons</label><div id="lessonList"></div>
+        <button class="btn ghost small" id="addLessonBtn" style="margin-top:6px;">+ Add lesson</button>
+      </div>
+      <div class="field"><label>Quiz questions</label><div id="quizList"></div>
+        <button class="btn ghost small" id="addQuestionBtn" style="margin-top:6px;">+ Add question</button>
+      </div>
+      <div class="modal-actions">
+        <button class="btn ghost" id="cancelEdit">Cancel</button>
+        <button class="btn primary" id="saveCourseBtn">Save course</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(bg);
+
+  function renderLessonList(){
+    const wrap = bg.querySelector('#lessonList');
+    wrap.innerHTML = course.lessons.map((l,i)=>`
+      <div class="lesson-edit-row" data-i="${i}">
+        <div class="row2">
+          <div><label style="font-size:10px;">Type</label>
+            <select class="lTypeSel" data-i="${i}">
+              <option value="text" ${l.type==='text'?'selected':''}>Text</option>
+              <option value="video" ${l.type==='video'?'selected':''}>Video (embed URL)</option>
+              <option value="file" ${l.type==='file'?'selected':''}>File (link)</option>
+            </select>
+          </div>
+          <div><label style="font-size:10px;">Title</label><input class="lTitleInp" data-i="${i}" value="${escapeAttr(l.title)}"></div>
+        </div>
+        <div style="margin-top:8px;"><label style="font-size:10px;">${l.type==='text' ? 'Content' : 'URL'}</label>
+          <textarea class="lContentInp" data-i="${i}" rows="2">${escapeHtml(l.content)}</textarea>
+        </div>
+        ${l.type==='file' ? `
+          <div style="margin-top:10px; padding-top:10px; border-top:1px dashed var(--line);">
+            <label style="font-size:10px;">Or upload a file (fills in the URL above automatically)</label>
+            <div style="display:flex; align-items:center; gap:8px; margin-top:4px;">
+              <input type="file" class="lFileInp" data-i="${i}">
+              <span class="mono" id="lFileStatus-${i}" style="font-size:11px; color:#8a8268;"></span>
+            </div>
+            <div style="margin-top:8px;"><label style="font-size:10px;">Display filename</label>
+              <input class="lFilenameInp" data-i="${i}" value="${escapeAttr(l.filename||'')}" placeholder="e.g. handout.pdf">
+            </div>
+          </div>
+        ` : ''}
+        <button class="btn ghost small removeLessonBtn" data-i="${i}" style="margin-top:10px; color:#9a3324;">Remove lesson</button>
+      </div>
+    `).join('') || `<p style="font-size:12px; color:#8a8268;">No lessons yet — add one below.</p>`;
+
+    wrap.querySelectorAll('.lTypeSel').forEach(el => el.onchange = () => { course.lessons[+el.dataset.i].type = el.value; renderLessonList(); });
+    wrap.querySelectorAll('.lTitleInp').forEach(el => el.oninput = () => { course.lessons[+el.dataset.i].title = el.value; });
+    wrap.querySelectorAll('.lContentInp').forEach(el => el.oninput = () => { course.lessons[+el.dataset.i].content = el.value; });
+    wrap.querySelectorAll('.lFilenameInp').forEach(el => el.oninput = () => { course.lessons[+el.dataset.i].filename = el.value; });
+    wrap.querySelectorAll('.lFileInp').forEach(el => el.onchange = async () => {
+      const file = el.files[0]; if(!file) return;
+      const i = +el.dataset.i;
+      const statusEl = bg.querySelector('#lFileStatus-'+i);
+      if(statusEl) statusEl.textContent = 'Uploading…';
+      const res = await uploadFileToStorage(file, course.id);
+      if(res){
+        course.lessons[i].content = res.url;
+        if(!course.lessons[i].filename) course.lessons[i].filename = res.name;
+        renderLessonList();
+      } else if(statusEl) statusEl.textContent = '';
+    });
+    wrap.querySelectorAll('.removeLessonBtn').forEach(el => el.onclick = () => { course.lessons.splice(+el.dataset.i,1); renderLessonList(); });
+  }
+  renderLessonList();
+
+  function renderQuizList(){
+    const wrap = bg.querySelector('#quizList');
+    wrap.innerHTML = course.quiz.map((q,qi)=>`
+      <div class="lesson-edit-row" data-qi="${qi}">
+        <label style="font-size:10px;">Question</label>
+        <textarea class="qTextInp" data-qi="${qi}" rows="2">${escapeHtml(q.q)}</textarea>
+        <label style="font-size:10px; margin-top:8px; display:block;">Options — select the correct one</label>
+        ${q.options.map((o,oi)=>`
+          <div style="display:flex; align-items:center; gap:8px; margin-top:5px;">
+            <input type="radio" name="correct-${qi}" class="qCorrectRadio" data-qi="${qi}" data-oi="${oi}" ${q.correct===oi?'checked':''}>
+            <input class="qOptInp" data-qi="${qi}" data-oi="${oi}" value="${escapeAttr(o)}" style="flex:1;">
+            <button class="btn ghost small removeOptBtn" data-qi="${qi}" data-oi="${oi}" style="color:#9a3324;">&times;</button>
+          </div>
+        `).join('')}
+        <button class="btn ghost small addOptBtn" data-qi="${qi}" style="margin-top:8px;">+ Add option</button>
+        <div style="margin-top:10px; padding-top:10px; border-top:1px dashed var(--line);">
+          <label style="font-size:10px;">Attachment (optional)</label>
+          <div style="display:flex; align-items:center; gap:8px; margin-top:4px;">
+            <input type="file" class="qFileInp" data-qi="${qi}">
+            <span class="mono" id="qFileStatus-${qi}" style="font-size:11px; color:#8a8268;">${q.attachmentName ? escapeHtml(q.attachmentName) : ''}</span>
+            ${q.attachmentName ? `<button class="btn ghost small removeAttBtn" data-qi="${qi}" style="color:#9a3324;">Remove</button>` : ''}
+          </div>
+        </div>
+        <button class="btn ghost small removeQBtn" data-qi="${qi}" style="margin-top:10px; color:#9a3324;">Remove question</button>
+      </div>
+    `).join('') || `<p style="font-size:12px; color:#8a8268;">No quiz questions yet — add one below.</p>`;
+
+    wrap.querySelectorAll('.qTextInp').forEach(el => el.oninput = () => { course.quiz[+el.dataset.qi].q = el.value; });
+    wrap.querySelectorAll('.qOptInp').forEach(el => el.oninput = () => { course.quiz[+el.dataset.qi].options[+el.dataset.oi] = el.value; });
+    wrap.querySelectorAll('.qCorrectRadio').forEach(el => el.onchange = () => { course.quiz[+el.dataset.qi].correct = +el.dataset.oi; });
+    wrap.querySelectorAll('.removeOptBtn').forEach(el => el.onclick = () => {
+      const qi = +el.dataset.qi, oi = +el.dataset.oi;
+      if(course.quiz[qi].options.length <= 1) return;
+      course.quiz[qi].options.splice(oi,1);
+      if(course.quiz[qi].correct >= course.quiz[qi].options.length) course.quiz[qi].correct = 0;
+      renderQuizList();
+    });
+    wrap.querySelectorAll('.addOptBtn').forEach(el => el.onclick = () => { course.quiz[+el.dataset.qi].options.push('New option'); renderQuizList(); });
+    wrap.querySelectorAll('.removeQBtn').forEach(el => el.onclick = () => { course.quiz.splice(+el.dataset.qi,1); renderQuizList(); });
+    wrap.querySelectorAll('.removeAttBtn').forEach(el => el.onclick = () => {
+      const qi = +el.dataset.qi;
+      delete course.quiz[qi].attachmentUrl; delete course.quiz[qi].attachmentName;
+      renderQuizList();
+    });
+    wrap.querySelectorAll('.qFileInp').forEach(el => el.onchange = async () => {
+      const file = el.files[0]; if(!file) return;
+      const qi = +el.dataset.qi;
+      const statusEl = bg.querySelector('#qFileStatus-'+qi);
+      if(statusEl) statusEl.textContent = 'Uploading…';
+      const res = await uploadFileToStorage(file, course.id+'/quiz');
+      if(res){
+        course.quiz[qi].attachmentUrl = res.url;
+        course.quiz[qi].attachmentName = res.name;
+        renderQuizList();
+      } else if(statusEl) statusEl.textContent = '';
+    });
+  }
+  renderQuizList();
+
+  bg.querySelector('#addLessonBtn').onclick = () => {
+    course.lessons.push({id: course.id+'-l'+Date.now(), type:'text', title:'New lesson', content:''});
+    renderLessonList();
+  };
+  bg.querySelector('#addQuestionBtn').onclick = () => {
+    course.quiz.push({ q:'New question', options:['Option A','Option B'], correct:0 });
+    renderQuizList();
+  };
+  bg.querySelector('#closeModal').onclick = () => bg.remove();
+  bg.querySelector('#cancelEdit').onclick = () => bg.remove();
+  bg.querySelector('#saveCourseBtn').onclick = async () => {
+    course.title = bg.querySelector('#edTitle').value.trim() || 'Untitled course';
+    course.description = bg.querySelector('#edDesc').value.trim();
+    await sb.from('courses').upsert({
+      id: course.id, accession: course.accession, title: course.title,
+      description: course.description, lessons: course.lessons, quiz: course.quiz
+    });
+    if(isNew) state.courses.push(course);
+    else state.courses = state.courses.map(c => c.id===course.id ? course : c);
+    bg.remove();
+    render();
+  };
+}
+
+/* ---------------- utils ---------------- */
+function escapeHtml(s){
+  return String(s==null?'':s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+}
+function escapeAttr(s){ return escapeHtml(s); }
+
+/* ---------------- boot ---------------- */
+async function boot(){
+  app.innerHTML = `<p style="padding:60px 0; text-align:center; color:#8a8268;">Loading…</p>`;
+  const { data: { session } } = await sb.auth.getSession();
+  await loadCourses();
+  if(session && session.user){
+    await afterAuth(session.user);
+  } else {
+    render();
+  }
+}
+boot();
+</script>
+</body>
+</html>
